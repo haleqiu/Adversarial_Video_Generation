@@ -114,7 +114,7 @@ class GeneratorModel:
                             if scale_num > 0:
                                 last_gen_frames = tf.image.resize_images(
                                     last_gen_frames,[scale_height, scale_width])
-                                inputs = tf.concat(3, [inputs, last_gen_frames])
+                                inputs = tf.concat([inputs, last_gen_frames],3)
 
                             # generated frame predictions
                             preds = inputs
