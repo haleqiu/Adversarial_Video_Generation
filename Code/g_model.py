@@ -387,7 +387,7 @@ class GeneratorModel:
                                                                self.sharpdiff_error_test,
                                                                self.summaries_test],
                                                               feed_dict=feed_dict)
-        mse = self.sess.run(self.mse_error_test,feed_dict=feed_dict) # from lyh
+            mse = self.sess.run(self.mse_error_test,feed_dict=feed_dict) # from lyh
             # remove first input and add new pred as last input
             working_input_frames = np.concatenate(
                 [working_input_frames[:, :, :, 3:], preds], axis=3)
@@ -399,7 +399,7 @@ class GeneratorModel:
             print 'Recursion ', rec_num
             print 'PSNR Error     : ', psnr
             print 'Sharpdiff Error: ', sharpdiff
-        print ('Mean Square Error: ', mse)
+            print ('Mean Square Error: ', mse)
         # write summaries
         # TODO: Think of a good way to write rec output summaries - rn, just using first output.
         self.summary_writer.add_summary(rec_summaries[0], global_step)
