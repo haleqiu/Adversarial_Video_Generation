@@ -131,7 +131,7 @@ def get_train_batch():
     return clips
 
 
-def get_test_batch(test_batch_size, num_rec_out=1):
+def get_test_batch(ep_dirs,num_clips ,num_rec_out=1):
     """
     Gets a clip from the test dataset.
 
@@ -143,7 +143,26 @@ def get_test_batch(test_batch_size, num_rec_out=1):
              [test_batch_size, c.TEST_HEIGHT, c.TEST_WIDTH, (3 * (c.HIST_LEN + num_rec_out))].
              A batch of frame sequences with values normalized in range [-1, 1].
     """
-    return get_full_clips(c.TEST_DIR, test_batch_size, num_rec_out=num_rec_out)
+    clips = np.empty([num_clips,
+                      c.FULL_HEIGHT,
+                      c.FULL_WIDTH,
+                      (3 * (c.HIST_LEN + num_rec_out))])
+
+    # get num_clips random episodes
+    # get a random clip of length HIST_LEN + num_rec_out from each episode
+    for clip_num, ep_dir in enumerate(ep_dirs):
+        ep_frame_paths = sorted(glob(os.path.join(ep_dir, '*')))
+        start_index = np.random.choice(len(ep_frame_paths) - (c.HIST_LEN + num_rec_out - 1))
+        clip_frame_paths = ep_frame_paths[start_index:start_index + (c.HIST_LEN + num_rec_out)]
+
+        # read in frames
+        for frame_num, frame_path in enumerate(clip_frame_paths):
+            frame = imread(frame_path, mode='RGB')
+            norm_frame = normalize_frames(frame)
+
+            clips[clip_num, :, :, frame_num * 3:(frame_num + 1) * 3] = norm_frame
+
+    return clips
 
 
 ##

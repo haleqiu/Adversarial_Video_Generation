@@ -93,9 +93,16 @@ class AVGRunner:
         """
         Runs one test step on the generator network.
         """
-        batch = get_test_batch(c.BATCH_SIZE, num_rec_out=self.num_test_rec)
-        self.g_model.test_batch(
-            batch, self.global_step, num_rec_out=self.num_test_rec)
+        all_dirs = sorted(np.array(glob(os.path.join(c.TEST_DIR, '*'))))
+        print("Total test batch: "+ len(all_dirs) + " batch_size = "+c.BATCH_SIZE)
+
+        for i in range(c.BATCH_SIZE,len(all_dirs),c.BATCH_SIZE):
+            eps = all_dirs[i-c.BATCH_SIZE:i]
+            print("eps: "eps)
+            batch = get_test_batch(eps,c.BATCH_SIZE, num_rec_out=self.num_test_rec)
+
+            self.g_model.test_batch(
+                batch, self.global_step, num_rec_out=self.num_test_rec)
 
 
 def usage():
