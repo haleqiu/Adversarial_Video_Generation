@@ -152,7 +152,7 @@ def get_test_batch(ep_dirs,num_clips ,num_rec_out=1):
     # get a random clip of length HIST_LEN + num_rec_out from each episode
     for clip_num, ep_dir in enumerate(ep_dirs):
         ep_frame_paths = sorted(glob(os.path.join(ep_dir, '*')))
-        start_index = np.random.choice(len(ep_frame_paths) - (c.HIST_LEN + num_rec_out - 1))
+        start_index = 1
         clip_frame_paths = ep_frame_paths[start_index:start_index + (c.HIST_LEN + num_rec_out)]
 
         # read in frames
