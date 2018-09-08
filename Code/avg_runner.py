@@ -102,7 +102,7 @@ class AVGRunner:
             batch = get_test_batch(eps,c.BATCH_SIZE, num_rec_out=self.num_test_rec)
 
             self.g_model.test_batch(
-                batch, self.global_step, num_rec_out=self.num_test_rec)
+                batch, eps, self.global_step, num_rec_out=self.num_test_rec)
 
 
 def usage():

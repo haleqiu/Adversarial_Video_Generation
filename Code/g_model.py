@@ -342,7 +342,7 @@ class GeneratorModel:
 
         return global_step
 
-    def test_batch(self, batch, global_step, num_rec_out=1, save_imgs=True):
+    def test_batch(self, batch,clips_name, global_step, num_rec_out=1, save_imgs=True):
         """
         Runs a training step using the global loss on each of the scale networks.
 
@@ -387,7 +387,7 @@ class GeneratorModel:
                                                                self.sharpdiff_error_test,
                                                                self.summaries_test],
                                                               feed_dict=feed_dict)
-
+        mse = self.sess.run(self.mse_error_test,feed_dict=feed_dict) # from lyh
             # remove first input and add new pred as last input
             working_input_frames = np.concatenate(
                 [working_input_frames[:, :, :, 3:], preds], axis=3)
@@ -399,7 +399,7 @@ class GeneratorModel:
             print 'Recursion ', rec_num
             print 'PSNR Error     : ', psnr
             print 'Sharpdiff Error: ', sharpdiff
-
+        print ('Mean Square Error: ', mse)
         # write summaries
         # TODO: Think of a good way to write rec output summaries - rn, just using first output.
         self.summary_writer.add_summary(rec_summaries[0], global_step)
@@ -410,19 +410,25 @@ class GeneratorModel:
 
         if save_imgs:
             for pred_num in xrange(len(input_frames)):
+                batch_name = (clips_name[pred_num][0].split('/'))[-2]# from lyh
                 pred_dir = c.get_dir(os.path.join(
-                    c.IMG_SAVE_DIR, 'Tests/Step_' + str(global_step), str(pred_num)))
-
+                    c.IMG_SAVE_DIR, 'Tests/Step_' + str(global_step), batch_name))# from lyh
+                '''
                 # save input images
                 for frame_num in xrange(c.HIST_LEN):
                     img = input_frames[pred_num, :, :, (frame_num * 3):((frame_num + 1) * 3)]
                     imsave(os.path.join(pred_dir, 'input_' + str(frame_num) + '.png'), img)
-
+                '''
                 # save recursive outputs
                 for rec_num in xrange(num_rec_out):
+                    '''
                     gen_img = rec_preds[rec_num][pred_num]
                     gt_img = gt_frames[pred_num, :, :, 3 * rec_num:3 * (rec_num + 1)]
-                    imsave(os.path.join(pred_dir, 'gen_' + str(rec_num) + '.png'), gen_img)
-                    imsave(os.path.join(pred_dir, 'gt_' + str(rec_num) + '.png'), gt_img)
+                    '''
+                    if ((rec_num+1)%5 == 0):
+                        out_num = '00' + str((rec_num+1)/5) #By lyh
+                        gen_name = batch_name + '_f' + out_num #By lyh
+                        imsave(os.path.join(pred_dir, gen_name + '.png'), gen_img) #By lyh
+
 
         print '-' * 30
