@@ -27,7 +27,7 @@ class AVGRunner:
         self.num_test_rec = num_test_rec
 
         self.sess = tf.Session()
-        self.summary_writer = tf.train.SummaryWriter(c.SUMMARY_SAVE_DIR, graph=self.sess.graph)
+        self.summary_writer = tf.summary.FileWriter(c.SUMMARY_SAVE_DIR, graph=self.sess.graph)
 
         if c.ADVERSARIAL:
             print 'Init discriminator...'
@@ -98,7 +98,7 @@ class AVGRunner:
 
         for i in range(c.BATCH_SIZE,len(all_dirs),c.BATCH_SIZE):
             eps = all_dirs[i-c.BATCH_SIZE:i]
-            print("eps: "eps)
+            print("eps: " + eps)
             batch = get_test_batch(eps,c.BATCH_SIZE, num_rec_out=self.num_test_rec)
 
             self.g_model.test_batch(
