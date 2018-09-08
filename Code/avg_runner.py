@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 import getopt
 import sys
 import os
@@ -94,7 +95,7 @@ class AVGRunner:
         Runs one test step on the generator network.
         """
         all_dirs = sorted(np.array(glob(os.path.join(c.TEST_DIR, '*'))))
-        print("Total test batch: "+ len(all_dirs) + " batch_size = "+c.BATCH_SIZE)
+        print("Total test batch: "+ len(all_dirs) + " batch_size = "+str(c.BATCH_SIZE))
 
         for i in range(c.BATCH_SIZE,len(all_dirs),c.BATCH_SIZE):
             eps = all_dirs[i-c.BATCH_SIZE:i]
